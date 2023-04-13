@@ -71,7 +71,6 @@ namespace BusinessLogic
                         if (user.Money > 100)
                         {
                             var percentage = Convert.ToDecimal(0.12);
-                            //If new user is normal and has more than USD100
                             var gif = user.Money * percentage;
                             user.Money += gif;
 
@@ -187,13 +186,6 @@ namespace BusinessLogic
                         throw new Exception(Constants.userDuplicated);
                     }
                 }
-
-                //if(!isDuplicated)
-                //{
-                //    response.IsSuccess = true;
-                //    response.Errors = string.Empty;
-                //}
-
                 _logger.LogInformation(Constants.userInfoValidated);
             }
             catch (Exception ex)
