@@ -6,3 +6,8 @@ juankenny1,juankenny1@gmail.com,555544440,avenidanaza1123,Normal,162.0
 juankenny2,juankenny2@gmail.com,555544449,avenidanaza1124,Normal,162.0
 juankenny3,juankenny3@gmail.com,555544442,avenidanaza1125,Normal,162.0
 Jean,Jean@gmail.com,978654321,ate0123,Normal,171.0
+Steven,steven@gmail.com,555577779,someadress123,Normal,90.0
+Jose,jose@gmail.com,1114447778,lamolina147,Normal,162.0
+Marcelo,marcelo@gmail.com,9998887775,avenidaprincipal147,Normal,0
+diego,diego@gmail.com,110101010,losproceres,Normal,171.0
+alejandro,alejandro@gmail.com,11010155,centro147,Normal,162.0

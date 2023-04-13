@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using BusinessLogic.Traccing;
+using Microsoft.Extensions.Logging;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace BusinessLogic
     {
         ILogger<UserManager> _logger;
         public List<User> Users;
-        StreamReader _reader;
+        string correlationId;
         
         public UserManager(ILogger<UserManager> logger)
         {
@@ -22,7 +23,9 @@ namespace BusinessLogic
         {
             try
             {
-                _logger.LogInformation("A request for create user begins.");
+                correlationId = CorrelationIdGenerator.Instance.GetCorrelationId();
+
+                _logger.LogInformation("A request for create user begins with Id: "+ correlationId);
 
                 var result = new Result();
 
@@ -39,7 +42,7 @@ namespace BusinessLogic
             }
             catch (Exception ex)
             {
-                _logger.LogError("An error ocurred: " + ex.Message);
+                _logger.LogError("An error ocurred: " + ex.Message+" with TraceId: " + correlationId);
                 throw;
             }
         }
@@ -57,7 +60,7 @@ namespace BusinessLogic
             }
             catch (Exception ex)
             {
-
+                _logger.LogError(Constants.exceptionRegisterNewUser + ex.Message+" with TraceId: "+correlationId);
                 throw;
             }
         }
@@ -126,7 +129,7 @@ namespace BusinessLogic
             }
             catch (Exception ex)
             {
-                _logger.LogError(Constants.exceptionEmail + ex.Message);
+                _logger.LogError(Constants.exceptionEmail + ex.Message + " with TraceId: " + correlationId);
                 throw;
             }            
         }
@@ -162,6 +165,9 @@ namespace BusinessLogic
                     }
                     reader.Close();
                 }
+
+                _logger.LogInformation(Constants.GetAllUsersSuccesfully + " with TraceId: " + correlationId);
+
                 return users;
             }
             catch (Exception ex)
@@ -175,22 +181,19 @@ namespace BusinessLogic
         {
             try
             {
-                var isDuplicated = false;
                 foreach (var usuario in users)
                 {
                     if (usuario.Email == user.Email || usuario.Phone == user.Phone || usuario.Address == user.Address)
                     {
-                        isDuplicated = true;
-
                         _logger.LogError(Constants.userDuplicated);
                         throw new Exception(Constants.userDuplicated);
                     }
                 }
-                _logger.LogInformation(Constants.userInfoValidated);
+                _logger.LogInformation(Constants.userInfoValidated +" with TraceId: " + correlationId);
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error: " + ex.Message);
+                _logger.LogError("Error: " + ex.Message + " with TraceId: " + correlationId);
                 throw;
             }
         }
