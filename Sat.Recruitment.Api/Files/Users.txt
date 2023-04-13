@@ -11,3 +11,4 @@ Jose,jose@gmail.com,1114447778,lamolina147,Normal,162.0
 Marcelo,marcelo@gmail.com,9998887775,avenidaprincipal147,Normal,0
 diego,diego@gmail.com,110101010,losproceres,Normal,171.0
 alejandro,alejandro@gmail.com,11010155,centro147,Normal,162.0
+Jorge,jorge@gmail.com,4445552227,libertadores1,Normal,126.0

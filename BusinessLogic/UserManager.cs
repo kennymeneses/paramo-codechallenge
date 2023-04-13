@@ -38,6 +38,8 @@ namespace BusinessLogic
                 result.IsSuccess = true;
                 result.Errors = null;
 
+                _logger.LogInformation("The user " + user.Name + " was created successfully with traceId: " + correlationId);
+
                 return result;
             }
             catch (Exception ex)
