@@ -25,7 +25,7 @@ namespace BusinessLogic
             {
                 correlationId = CorrelationIdGenerator.Instance.GetCorrelationId();
 
-                _logger.LogInformation("A request for create user begins with Id: "+ correlationId);
+                _logger.LogInformation(Constants.createUserRequest + correlationId);
 
                 var result = new Result();
 
@@ -38,7 +38,7 @@ namespace BusinessLogic
                 result.IsSuccess = true;
                 result.Errors = null;
 
-                _logger.LogInformation("The user " + user.Name + " was created successfully with traceId: " + correlationId);
+                _logger.LogInformation(Constants.userCreated + correlationId);
 
                 return result;
             }
@@ -168,7 +168,7 @@ namespace BusinessLogic
                     reader.Close();
                 }
 
-                _logger.LogInformation(Constants.GetAllUsersSuccesfully + " with TraceId: " + correlationId);
+                _logger.LogInformation(Constants.GetAllUsersSuccesfully + correlationId);
 
                 return users;
             }
@@ -191,7 +191,7 @@ namespace BusinessLogic
                         throw new Exception(Constants.userDuplicated);
                     }
                 }
-                _logger.LogInformation(Constants.userInfoValidated +" with TraceId: " + correlationId);
+                _logger.LogInformation(Constants.userInfoValidated + correlationId);
             }
             catch (Exception ex)
             {

@@ -7,10 +7,11 @@
         public const string superType = "SuperUser";
         public const string premiumType = "Premium";
 
-        public const string userCreated = "User Created";
+        public const string createUserRequest = "A create user request begins with Id: ";
+        public const string userCreated = "The user was created successfully with traceId: ";
 
-        public const string GetAllUsersSuccesfully = "The users were loaded succesfully.";
-        public const string userInfoValidated = "The user info was validated successfully.";
+        public const string GetAllUsersSuccesfully = "The users were loaded succesfully with TraceId: ";
+        public const string userInfoValidated = "The user info was validated successfully with TraceId: ";
         #endregion
 
         #region Errors
