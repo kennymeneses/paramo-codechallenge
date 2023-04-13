@@ -1,10 +1,9 @@
-using System;
-using System.Dynamic;
-
+using BusinessLogic;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.Extensions.Logging;
+using Models;
+using Moq;
 using Sat.Recruitment.Api.Controllers;
-
 using Xunit;
 
 namespace Sat.Recruitment.Test
@@ -12,28 +11,81 @@ namespace Sat.Recruitment.Test
     [CollectionDefinition("Tests", DisableParallelization = true)]
     public class UnitTest1
     {
+        Mock<ILogger<UsersController>> mock_logger = new Mock<ILogger<UsersController>>();
+        Mock<IUserManager> mockUserManager = new Mock<IUserManager>();
+
+        UsersController userController => new UsersController(mockUserManager.Object, mock_logger.Object);
+
         [Fact]
-        public void Test1()
+        public async void It_ShouldCreateUserWhenUserIsValid()
         {
-            var userController = new UsersController();
+            var user = new User()
+            {
+                Name = "Kenny",
+                Email = "random@gmail.com",
+                Address = "NoWhere",
+                Phone = "123456789",
+                UserType = "Normal",
+                Money = 80,
+            };
 
-            var result = userController.CreateUser("Mike", "mike@gmail.com", "Av. Juan G", "+349 1122354215", "Normal", "124").Result;
+            var result = new Result() { Errors = null, IsSuccess = true };
+            mockUserManager.Setup(x => x.CreateUser(user)).ReturnsAsync(result);
+            var response = await userController.CreateUser(user) as ObjectResult;
 
-
-            Assert.Equal(true, result.IsSuccess);
-            Assert.Equal("User Created", result.Errors);
+            Assert.Equal(201, response.StatusCode);
         }
 
         [Fact]
-        public void Test2()
+        public async void It_ShouldCreateUserFromUserManager()
         {
-            var userController = new UsersController();
+            var user = new User()
+            {
+                Name = "Kenny",
+                Email = "random@gmail.com",
+                Address = "NoWhere",
+                Phone = "123456789",
+                UserType = "Normal",
+                Money = 80,
+            };
 
-            var result = userController.CreateUser("Agustina", "Agustina@gmail.com", "Av. Juan G", "+349 1122354215", "Normal", "124").Result;
+            await userController.CreateUser(user);
 
+            mockUserManager.Verify(u => u.CreateUser(It.IsAny<User>()), Times.Once);
+        }
 
-            Assert.Equal(false, result.IsSuccess);
-            Assert.Equal("The user is duplicated", result.Errors);
+        [Fact]
+        public async void It_ShouldNotCreateUserWhenInputBodyIsInvalid()
+        {
+            var badbody = new User { Name = "JustHasName" };
+
+            var actionResult = await userController.CreateUser(badbody);
+
+            Assert.IsType<BadRequestObjectResult>(actionResult);
+        }
+
+        [Fact]
+        public async void It_ShouldNotCreateUserWhenUserIsInvalid()
+        {
+            var user = new User()
+            {
+                Name = "",
+                Email = "random@gmail.com",
+                Address = "NoWhere",
+                Phone = "123456789",
+                UserType = "Normal",
+                Money = 80,
+            };
+
+            var result = new Result()
+            {
+                IsSuccess = false,
+                Errors = "Validation error message"
+            };
+
+            var actionResult = await userController.CreateUser(user);
+
+            Assert.IsType<BadRequestObjectResult>(actionResult);           
         }
     }
 }
