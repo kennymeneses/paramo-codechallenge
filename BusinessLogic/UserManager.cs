@@ -30,14 +30,35 @@ namespace BusinessLogic
                 user.Money = GetUserMoney(user);
                 user.Email = NormalizeEmail(user.Email);
                 var userList = await GetUsersFromFile();
+                ValidateUserInfo(user, userList);
+                await AddUserToFile(user);
 
-                result = ValidateUserInfo(user, userList);
+                result.IsSuccess = true;
+                result.Errors = null;
 
                 return result;
             }
             catch (Exception ex)
             {
                 _logger.LogError("An error ocurred: " + ex.Message);
+                throw;
+            }
+        }
+
+        public async Task AddUserToFile(User user)
+        {
+            try
+            {
+                var path = Directory.GetCurrentDirectory() + Constants.pathUsersFile;
+
+                using (StreamWriter sw = File.AppendText(path))
+                {
+                    await sw.WriteLineAsync($"{user.Name},{user.Email},{user.Phone},{user.Address},{user.UserType},{user.Money}");
+                }
+            }
+            catch (Exception ex)
+            {
+
                 throw;
             }
         }
@@ -152,12 +173,10 @@ namespace BusinessLogic
             }
         }
 
-        private Result ValidateUserInfo(User user, List<User> users)
+        private void ValidateUserInfo(User user, List<User> users)
         {
             try
             {
-                var response = new Result();
-
                 var isDuplicated = false;
                 foreach (var usuario in users)
                 {
@@ -170,14 +189,13 @@ namespace BusinessLogic
                     }
                 }
 
-                if(!isDuplicated)
-                {
-                    response.IsSuccess = true;
-                    response.Errors = string.Empty;
-                }
+                //if(!isDuplicated)
+                //{
+                //    response.IsSuccess = true;
+                //    response.Errors = string.Empty;
+                //}
 
                 _logger.LogInformation(Constants.userInfoValidated);
-                return response;
             }
             catch (Exception ex)
             {
