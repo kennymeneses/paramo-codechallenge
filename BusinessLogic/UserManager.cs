@@ -29,7 +29,7 @@ namespace BusinessLogic
 
                 user.Money = GetUserMoney(user);
                 user.Email = NormalizeEmail(user.Email);
-                var userList = GetUsersFromFile();
+                var userList = await GetUsersFromFile();
 
                 result = ValidateUserInfo(user, userList);
 
@@ -112,7 +112,7 @@ namespace BusinessLogic
             }            
         }
 
-        private List<User> GetUsersFromFile()
+        private async Task<List<User>> GetUsersFromFile()
         {
             try
             {
@@ -127,11 +127,9 @@ namespace BusinessLogic
                 using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true))
                 using (var reader = new StreamReader(fileStream))
                 {
-                    
-
                     while (reader.Peek() >= 0)
                     {
-                        var line = reader.ReadLineAsync().Result;
+                        var line = await reader.ReadLineAsync();
                         var _user = new User
                         {
                             Name = line.Split(',')[0].ToString(),
